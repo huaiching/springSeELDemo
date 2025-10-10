@@ -61,7 +61,7 @@ Boolean result = parser.parseExpression(rule)
 
 ---
 
-## SpEL 表達式運算子
+## SpEL 表達式
 
 ### 1. 比較運算子
 
@@ -117,7 +117,7 @@ Boolean result = parser.parseExpression(rule)
 
 ---
 
-### 6. 常用函式
+### 6. 函式
 
 SpEL 可直接調用 JAVA 的基本方法，如：**String 的基本方法**。
 
@@ -130,6 +130,44 @@ SpEL 可直接調用 JAVA 的基本方法，如：**String 的基本方法**。
 | `contains(text)`        | 是否包含指定文字  | `#planClasCode.contains('9A')`  |
 | `startsWith(text)`      | 是否以指定字首開頭 | `#planClasCode.startsWith('9')` |
 | `endsWith(text)`        | 是否以指定字尾結尾 | `#planClasCode.endsWith('1')`   |
+
+---
+
+### 7. 物件資料
+
+SpEL 表達式的變數，也可以是 DTO。
+
+此時 可以透過 `#變數.屬性` 來取得 特定屬性的資料。
+
+- DTO 
+  
+  ```java
+  public class UserDto {
+      private String userCode;
+      private String userName;
+      private String userDept;
+  }
+  ```
+
+- 範例
+  
+  - `#變數.屬性` 可以取得該屬性的數值
+  
+  - 表達式 除了 可以透過 三元表達式 的方式 來判斷規則，也可以用下面方式取得資料
+  
+  ```java
+  Map<String, Object> result = new HashMap<>();
+  result.put("user",new UserDto("ABC001","測試人員","90250"));
+  
+  ExpressionParser parser = new SpelExpressionParser();
+  EvaluationContext context = new StandardEvaluationContext();
+  dataMap.forEach(context::setVariable);
+  
+  String result = parser.parseExpression("#user.userCode")
+          .getValue(context, String.class);
+  
+  System.out.println(result);    // 輸出：ABC001
+  ```
 
 ---
 

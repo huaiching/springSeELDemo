@@ -1,5 +1,6 @@
 package com.mli.spel.config.service;
 
+import com.mli.spel.config.dto.UserDto;
 import com.mli.spel.config.vo.ResultVo;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
@@ -18,6 +19,7 @@ public class DemoService {
         Map<String, Object> dataMap = getDataMap();
         // 規則檢核
         Boolean ruleResult = spELRule(dataMap);
+        spELRule2(dataMap);
 
         ResultVo result = new ResultVo();
         result.setResult(ruleResult);
@@ -35,6 +37,7 @@ public class DemoService {
         result.put("income", 50000);
         result.put("address", "台北市內湖區石潭路58號1樓");
         result.put("currency", Arrays.asList("TWD","USD"));
+        result.put("user",new UserDto("ABC001","測試人員","90250"));
 
         return result;
     }
@@ -58,5 +61,20 @@ public class DemoService {
                 .getValue(context, Boolean.class);
 
         return result;
+    }
+
+    /**
+     * spEL 規則檢核
+     * @return
+     */
+    private void spELRule2(Map<String, Object> dataMap) {
+        ExpressionParser parser = new SpelExpressionParser();
+        EvaluationContext context = new StandardEvaluationContext();
+        dataMap.forEach(context::setVariable);
+
+        String result = parser.parseExpression("#user.userCode")
+                .getValue(context, String.class);
+
+        System.out.println(result);
     }
 }
