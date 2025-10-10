@@ -37,7 +37,7 @@ public class DemoService {
         result.put("income", 50000);
         result.put("address", "台北市內湖區石潭路58號1樓");
         result.put("currency", Arrays.asList("TWD","USD"));
-        result.put("user",new UserDto("ABC001","測試人員","90250"));
+        result.put("user",new UserDto("A123456789","測試人員","90251"));
 
         return result;
     }
@@ -51,10 +51,12 @@ public class DemoService {
         EvaluationContext context = new StandardEvaluationContext();
         dataMap.forEach(context::setVariable);
 
-        String rule = "#age >= 30 and #income > 10000 and #address matches '.*台北市.*'";
+//        String rule = "#age >= 30 and #income > 10000 and #address matches '.*台北市.*'";
 //        String rule = "#currency[0] != 'USD'";
 //        String rule = "#currency.contains(\"USD\")";
 //        String rule = "#address.substring(0,3) == \"台北市\"";
+        String rule = "#user?.userDept matches '9025*'";
+
         String expression = rule + " ? true : false";
         Boolean result = parser.parseExpression(
                         expression)
