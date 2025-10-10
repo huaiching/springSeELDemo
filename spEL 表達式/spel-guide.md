@@ -141,6 +141,12 @@ SpEL 不僅可操作基本型別，也能直接使用 **物件 (DTO)** 中的屬
 
 甚至支援 巢狀屬性存取（如 `#user.department.name`）。
 
+- 安全導向運算子 `?.`
+  
+  當物件屬性可能為 `null` 時，若直接使用 `#user.deptName`，會拋出 `NullPointerException`。
+  
+  此時可使用 安全運算子 `#user?.name` 來避免異常，讓表達式會回傳 `null`。
+
 - 範例
   
   - DTO 

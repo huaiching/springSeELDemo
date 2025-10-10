@@ -1492,6 +1492,10 @@ dataMap<span class="token punctuation">.</span><span class="token function">forE
 <p>當變數為物件時，可透過 <code>#變數.屬性</code> 方式存取屬性值，</p>
 <p>甚至支援 巢狀屬性存取（如 <code>#user.department.name</code>）。</p>
 <ul>
+<li><p>安全導向運算子 <code>?.</code></p>
+<p>當物件屬性可能為 <code>null</code> 時，若直接使用 <code>#user.deptName</code>，會拋出 <code>NullPointerException</code>。</p>
+<p>此時可使用 安全運算子 <code>#user?.name</code> 來避免異常，讓表達式會回傳 <code>null</code>。</p>
+</li>
 <li><p>範例</p>
 <ul>
 <li><p>DTO </p>
