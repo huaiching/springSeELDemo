@@ -1488,34 +1488,49 @@ dataMap<span class="token punctuation">.</span><span class="token function">forE
 </tbody></table>
 <hr>
 <h3 class="atx" id="7-物件資料">7. 物件資料</h3>
-<p>SpEL 表達式的變數，也可以是 DTO。</p>
-<p>此時 可以透過 <code>#變數.屬性</code> 來取得 特定屬性的資料。</p>
+<p>SpEL 不僅可操作基本型別，也能直接使用 <strong>物件 (DTO)</strong> 中的屬性。</p>
+<p>當變數為物件時，可透過 <code>#變數.屬性</code> 方式存取屬性值，</p>
+<p>甚至支援 巢狀屬性存取（如 <code>#user.department.name</code>）。</p>
+<ul>
+<li><p>範例</p>
 <ul>
 <li><p>DTO </p>
 <pre><code class="fenced-code-block language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">UserDto</span> <span class="token punctuation">{</span>
     <span class="token keyword">private</span> <span class="token class-name">String</span> userCode<span class="token punctuation">;</span>
     <span class="token keyword">private</span> <span class="token class-name">String</span> userName<span class="token punctuation">;</span>
     <span class="token keyword">private</span> <span class="token class-name">String</span> userDept<span class="token punctuation">;</span>
+
+    <span class="token comment">// Getter / Setter 省略</span>
 <span class="token punctuation">}</span></code></pre>
 </li>
-<li><p>範例</p>
-<ul>
-<li><p><code>#變數.屬性</code> 可以取得該屬性的數值</p>
-</li>
-<li><p>表達式 除了 可以透過 三元表達式 的方式 來判斷規則，也可以用下面方式取得資料</p>
-</li>
-</ul>
-<pre><code class="fenced-code-block language-java"><span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">Object</span><span class="token punctuation">&gt;</span></span> result <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-result<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"user"</span><span class="token punctuation">,</span><span class="token keyword">new</span> <span class="token class-name">UserDto</span><span class="token punctuation">(</span><span class="token string">"ABC001"</span><span class="token punctuation">,</span><span class="token string">"測試人員"</span><span class="token punctuation">,</span><span class="token string">"90250"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<li><p>取值範例</p>
+<pre><code class="fenced-code-block language-java"><span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">Object</span><span class="token punctuation">&gt;</span></span> dataMap <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dataMap<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"user"</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">UserDto</span><span class="token punctuation">(</span><span class="token string">"ABC001"</span><span class="token punctuation">,</span> <span class="token string">"測試人員"</span><span class="token punctuation">,</span> <span class="token string">"90250"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token class-name">ExpressionParser</span> parser <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SpelExpressionParser</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token class-name">EvaluationContext</span> context <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">StandardEvaluationContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 dataMap<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>context<span class="token operator">::</span><span class="token function">setVariable</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-<span class="token class-name">String</span> result <span class="token operator">=</span> parser<span class="token punctuation">.</span><span class="token function">parseExpression</span><span class="token punctuation">(</span><span class="token string">"#user.userCode"</span><span class="token punctuation">)</span>
+<span class="token class-name">String</span> userCode <span class="token operator">=</span> parser<span class="token punctuation">.</span><span class="token function">parseExpression</span><span class="token punctuation">(</span><span class="token string">"#user.userCode"</span><span class="token punctuation">)</span>
         <span class="token punctuation">.</span><span class="token function">getValue</span><span class="token punctuation">(</span>context<span class="token punctuation">,</span> <span class="token class-name">String</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 輸出：ABC001</span></code></pre>
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>userCode<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 輸出：ABC001</span></code></pre>
+</li>
+<li><p>判斷範例</p>
+<pre><code class="fenced-code-block language-java"><span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">Object</span><span class="token punctuation">&gt;</span></span> dataMap <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dataMap<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"user"</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">UserDto</span><span class="token punctuation">(</span><span class="token string">"ABC001"</span><span class="token punctuation">,</span> <span class="token string">"測試人員"</span><span class="token punctuation">,</span> <span class="token string">"90250"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token class-name">ExpressionParser</span> parser <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SpelExpressionParser</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">EvaluationContext</span> context <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">StandardEvaluationContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dataMap<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>context<span class="token operator">::</span><span class="token function">setVariable</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token class-name">String</span> rule <span class="token operator">=</span> <span class="token string">"#user.userDept == '90250' ? '同部門' : '其他部門'"</span><span class="token punctuation">;</span>
+<span class="token class-name">String</span> result <span class="token operator">=</span> parser<span class="token punctuation">.</span><span class="token function">parseExpression</span><span class="token punctuation">(</span>rule<span class="token punctuation">)</span>
+        <span class="token punctuation">.</span><span class="token function">getValue</span><span class="token punctuation">(</span>context<span class="token punctuation">,</span> <span class="token class-name">String</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 輸出：同部門</span></code></pre>
+</li>
+</ul>
 </li>
 </ul>
 <hr>

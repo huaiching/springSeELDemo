@@ -135,39 +135,58 @@ SpEL 可直接調用 JAVA 的基本方法，如：**String 的基本方法**。
 
 ### 7. 物件資料
 
-SpEL 表達式的變數，也可以是 DTO。
+SpEL 不僅可操作基本型別，也能直接使用 **物件 (DTO)** 中的屬性。
 
-此時 可以透過 `#變數.屬性` 來取得 特定屬性的資料。
+當變數為物件時，可透過 `#變數.屬性` 方式存取屬性值，
 
-- DTO 
-  
-  ```java
-  public class UserDto {
-      private String userCode;
-      private String userName;
-      private String userDept;
-  }
-  ```
+甚至支援 巢狀屬性存取（如 `#user.department.name`）。
 
 - 範例
   
-  - `#變數.屬性` 可以取得該屬性的數值
+  - DTO 
+    
+    ```java
+    public class UserDto {
+        private String userCode;
+        private String userName;
+        private String userDept;
+    
+        // Getter / Setter 省略
+    }
+    ```
   
-  - 表達式 除了 可以透過 三元表達式 的方式 來判斷規則，也可以用下面方式取得資料
+  - 取值範例
+    
+    ```java
+    Map<String, Object> dataMap = new HashMap<>();
+    dataMap.put("user", new UserDto("ABC001", "測試人員", "90250"));
+    
+    ExpressionParser parser = new SpelExpressionParser();
+    EvaluationContext context = new StandardEvaluationContext();
+    dataMap.forEach(context::setVariable);
+    
+    String userCode = parser.parseExpression("#user.userCode")
+            .getValue(context, String.class);
+    
+    System.out.println(userCode); // 輸出：ABC001
+    ```
   
-  ```java
-  Map<String, Object> result = new HashMap<>();
-  result.put("user",new UserDto("ABC001","測試人員","90250"));
-  
-  ExpressionParser parser = new SpelExpressionParser();
-  EvaluationContext context = new StandardEvaluationContext();
-  dataMap.forEach(context::setVariable);
-  
-  String result = parser.parseExpression("#user.userCode")
-          .getValue(context, String.class);
-  
-  System.out.println(result);    // 輸出：ABC001
-  ```
+  - 判斷範例
+    
+    ```java
+    Map<String, Object> dataMap = new HashMap<>();
+    dataMap.put("user", new UserDto("ABC001", "測試人員", "90250"));
+    
+    ExpressionParser parser = new SpelExpressionParser();
+    EvaluationContext context = new StandardEvaluationContext();
+    dataMap.forEach(context::setVariable);
+    
+    String rule = "#user.userDept == '90250' ? '同部門' : '其他部門'";
+    String result = parser.parseExpression(rule)
+            .getValue(context, String.class);
+    
+    System.out.println(result); // 輸出：同部門
+    ```
 
 ---
 
