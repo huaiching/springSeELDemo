@@ -14,12 +14,14 @@ public class ValidateService {
      */
     public String verifySpelExpression(String expression) {
         ExpressionParser parser = new SpelExpressionParser();
+
+        // 過濾不允許的賦值運算子
+        if (expression.contains(" = ")) {
+            return "不合格";
+        }
+
+        // 語法解析
         try {
-            // 過濾不允許的賦值運算子
-            if (expression.contains(" = ")) {
-                return "不合格"; // 禁止賦值 =
-            }
-            // 語法解析
             parser.parseExpression(expression);
             return "合格";
         } catch (ParseException e) {
