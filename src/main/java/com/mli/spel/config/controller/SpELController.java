@@ -21,10 +21,10 @@ public class SpELController {
     private DemoService demoService;
 
     @Operation(summary = "spEL 表達式 語法驗證", description = "spEL 表達式 語法驗證")
-    @PostMapping("/validateSpEL")
-    public ResponseEntity<ResultVo> validateSpEL(@RequestBody ValidateSpELSerachDto validateSpELSerachDto) {
-        ResultVo resultVo = validateService.validateExpression(validateSpELSerachDto.getSpelExpr());
-        return ResponseEntity.ok(resultVo);
+    @PostMapping("/verifySpelExpression")
+    public ResponseEntity<String> validateSpEL(@RequestBody ValidateSpELSerachDto validateSpELSerachDto) {
+        String result = validateService.verifySpelExpression(validateSpELSerachDto.getSpelExpr());
+        return ResponseEntity.ok(result);
     }
 
 
