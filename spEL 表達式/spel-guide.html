@@ -1538,7 +1538,7 @@ dataMap<span class="token punctuation">.</span><span class="token function">forE
 </li>
 </ul>
 <hr>
-<h2 class="atx" id="完整範例"><strong>完整範例</strong></h2>
+<h3 class="atx" id="8-規則檢核-完整範例">8. 規則檢核 完整範例</h3>
 <pre><code class="fenced-code-block language-java"><span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">Object</span><span class="token punctuation">&gt;</span></span> data <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 data<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"age"</span><span class="token punctuation">,</span> <span class="token number">22</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 data<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"name"</span><span class="token punctuation">,</span> <span class="token string">"John"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -1552,6 +1552,46 @@ data<span class="token punctuation">.</span><span class="token function">forEach
 <span class="token class-name">String</span> result <span class="token operator">=</span> parser<span class="token punctuation">.</span><span class="token function">parseExpression</span><span class="token punctuation">(</span>rule<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getValue</span><span class="token punctuation">(</span>context<span class="token punctuation">,</span> <span class="token class-name">String</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 輸出：合格</span></code></pre>
+<hr>
+<h3 class="atx" id="9-數值計算">9. 數值計算</h3>
+<p>spEL 表達式 可以用來進行 數值計算，並且 可以使用 JAVA 的函式</p>
+<ul>
+<li><p>語法</p>
+<ul>
+<li><code>T(import).函式名稱(輸入參數)</code></li>
+</ul>
+</li>
+<li><p>範例</p>
+<ul>
+<li><code>T(java.lang.Math).max(#V001, #V002)</code></li>
+</ul>
+</li>
+<li><p>完整範例</p>
+<ul>
+<li><p>數值三者取其大</p>
+<pre><code class="fenced-code-block language-java"><span class="token keyword">public</span> <span class="token class-name">Double</span> <span class="token function">spelCalcDemo1</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 設定變數</span>
+    <span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">Object</span><span class="token punctuation">&gt;</span></span> dataMap <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    dataMap<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"V001"</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    dataMap<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"V002"</span><span class="token punctuation">,</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    dataMap<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"V003"</span><span class="token punctuation">,</span> <span class="token number">700</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    dataMap<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"V004"</span><span class="token punctuation">,</span> <span class="token number">450</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 進行計算</span>
+    <span class="token class-name">ExpressionParser</span> parser <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SpelExpressionParser</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">EvaluationContext</span> context <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">StandardEvaluationContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    dataMap<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>context<span class="token operator">::</span><span class="token function">setVariable</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token class-name">String</span> rule <span class="token operator">=</span> <span class="token string">"T(java.lang.Math).max(#V001, T(java.lang.Math).max(#V002, (#V003 + #V004)))"</span><span class="token punctuation">;</span>
+
+    <span class="token class-name">Double</span> result <span class="token operator">=</span> parser<span class="token punctuation">.</span><span class="token function">parseExpression</span><span class="token punctuation">(</span>rule<span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">getValue</span><span class="token punctuation">(</span>context<span class="token punctuation">,</span> <span class="token class-name">Double</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">return</span> result<span class="token punctuation">;</span>  <span class="token comment">// 輸出: 1150</span>
+<span class="token punctuation">}</span></code></pre>
+</li>
+</ul>
+</li>
+</ul>
 </article>
 </body>
 </html>

@@ -196,7 +196,7 @@ SpEL 不僅可操作基本型別，也能直接使用 **物件 (DTO)** 中的屬
 
 ---
 
-## **完整範例**
+### 8. 規則檢核 完整範例
 
 ```java
 Map<String, Object> data = new HashMap<>();
@@ -213,3 +213,43 @@ String result = parser.parseExpression(rule).getValue(context, String.class);
 
 System.out.println(result); // 輸出：合格
 ```
+
+---
+
+### 9. 數值計算
+
+spEL 表達式 可以用來進行 數值計算，並且 可以使用 JAVA 的函式
+
+- 語法
+  
+  - `T(import).函式名稱(輸入參數)`
+
+- 範例
+  
+  - `T(java.lang.Math).max(#V001, #V002)`
+
+- 完整範例
+  
+  - 數值三者取其大
+    
+    ```java
+    public Double spelCalcDemo1() {
+        // 設定變數
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("V001", 500);
+        dataMap.put("V002", 1000);
+        dataMap.put("V003", 700);
+        dataMap.put("V004", 450);
+        // 進行計算
+        ExpressionParser parser = new SpelExpressionParser();
+        EvaluationContext context = new StandardEvaluationContext();
+        dataMap.forEach(context::setVariable);
+    
+        String rule = "T(java.lang.Math).max(#V001, T(java.lang.Math).max(#V002, (#V003 + #V004)))";
+    
+        Double result = parser.parseExpression(rule)
+                .getValue(context, Double.class);
+    
+        return result;  // 輸出: 1150
+    }
+    ```

@@ -29,4 +29,5 @@ public class ValidateService {
             return "不合格";
         }
     }
+
 }

@@ -79,4 +79,24 @@ public class DemoService {
 
         System.out.println(result);
     }
+
+    public Double spelCalcDemo1() {
+        // 設定變數
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("V001", 500);
+        dataMap.put("V002", 1000);
+        dataMap.put("V003", 700);
+        dataMap.put("V004", 450);
+        // 進行計算
+        ExpressionParser parser = new SpelExpressionParser();
+        EvaluationContext context = new StandardEvaluationContext();
+        dataMap.forEach(context::setVariable);
+
+        String rule = "T(java.lang.Math).max(#V001, T(java.lang.Math).max(#V002, (#V003 + #V004)))";
+
+        Double result = parser.parseExpression(rule)
+                .getValue(context, Double.class);
+
+        return result;
+    }
 }
