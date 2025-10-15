@@ -1,4 +1,4 @@
-package com.mli.spel.config.service;
+package com.mli.spel.service;
 
 import org.springframework.stereotype.Service;
 

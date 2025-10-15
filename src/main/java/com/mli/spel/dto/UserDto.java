@@ -1,4 +1,4 @@
-package com.mli.spel.config.dto;
+package com.mli.spel.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

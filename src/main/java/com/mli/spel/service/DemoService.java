@@ -1,13 +1,14 @@
-package com.mli.spel.config.service;
+package com.mli.spel.service;
 
-import com.mli.spel.config.dto.UserDto;
-import com.mli.spel.config.vo.ResultVo;
+import com.mli.spel.dto.UserDto;
+import com.mli.spel.vo.ResultVo;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,8 +38,7 @@ public class DemoService {
 //        String rule = "#user?.userDept matches '9025.*'";
 
         String expression = rule + " ? true : false";
-        Boolean result = parser.parseExpression(expression)
-                .getValue(context, Boolean.class);
+        Boolean result = parser.parseExpression(expression).getValue(context, Boolean.class);
 
         // 設定輸出
         ResultVo output = new ResultVo();
@@ -62,8 +62,7 @@ public class DemoService {
 
         String expression = "#user?.userCode";
 
-        String result = parser.parseExpression(expression)
-                .getValue(context, String.class);
+        String result = parser.parseExpression(expression).getValue(context, String.class);
 
         return result;
     }
@@ -85,9 +84,51 @@ public class DemoService {
 
         String expression = "T(java.lang.Math).max(#V001, T(java.lang.Math).max(#V002, (#V003 + #V004)))";
 
-        Double result = parser.parseExpression(expression)
-                .getValue(context, Double.class);
+        Double result = parser.parseExpression(expression).getValue(context, Double.class);
 
         return result;
     }
+    /**
+     * 自製 Method 範例: 金額計算
+     */
+    public Double spelDemo4() {
+        // 模擬輸入變數
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("baseSalary", 50000);  // 基本薪資
+        dataMap.put("bonus", 8000);        // 獎金
+        dataMap.put("taxRate", 0.9);       // 稅率
+
+        // 初始化 SpEL 解析環境
+        ExpressionParser parser = new SpelExpressionParser();
+        StandardEvaluationContext context = new StandardEvaluationContext();
+        dataMap.forEach(context::setVariable);
+
+        try {
+            // 將自製方法註冊進 SpEL 環境
+            Method calcMethod = DemoService.class.getDeclaredMethod("calcTotalAmount", Double.class, Double.class, Double.class);
+            context.registerFunction("calcTotalAmount", calcMethod);
+
+            // SpEL 表達式：呼叫自製方法
+            String rule = "#calcTotalAmount(#baseSalary, #bonus, #taxRate)";
+
+            Double result = parser.parseExpression(rule).getValue(context, Double.class);
+            return result;
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * 自製金額計算方法
+     */
+    private static Double calcTotalAmount(Double base, Double bonus, Double taxRate) {
+        if (base == null) base = 0.0;
+        if (bonus == null) bonus = 0.0;
+        if (taxRate == null) taxRate = 1.0;
+
+        // 總金額 = (基本薪資 + 獎金) × 稅率
+        return (base + bonus) * taxRate;
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.mli.spel.config.vo;
+package com.mli.spel.vo;
 
 public class ResultVo {
     private String rule;

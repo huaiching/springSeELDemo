@@ -1,9 +1,9 @@
-package com.mli.spel.config.controller;
+package com.mli.spel.controller;
 
-import com.mli.spel.config.dto.ValidateSpELSerachDto;
-import com.mli.spel.config.service.DemoService;
-import com.mli.spel.config.service.ValidateService;
-import com.mli.spel.config.vo.ResultVo;
+import com.mli.spel.dto.ValidateSpELSerachDto;
+import com.mli.spel.service.DemoService;
+import com.mli.spel.service.ValidateService;
+import com.mli.spel.vo.ResultVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +48,13 @@ public class SpELController {
     @PostMapping("/spelDemo3")
     public ResponseEntity<Double> spelDemo3() {
         Double resultVo = demoService.spelDemo3();
+        return ResponseEntity.ok(resultVo);
+    }
+
+    @Operation(summary = "自製 Method 範例: 金額計算", description = "自製 Method 範例: 金額計算")
+    @PostMapping("/spelDemo4")
+    public ResponseEntity<Double> spelDemo4() {
+        Double resultVo = demoService.spelDemo4();
         return ResponseEntity.ok(resultVo);
     }
 }
