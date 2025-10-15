@@ -10,9 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "SpEL Controller", description = "SpEL Demo API 接口")
+@RequestMapping("/demo")
 @RestController
 public class SpELController {
     @Autowired
@@ -29,16 +31,23 @@ public class SpELController {
 
 
     @Operation(summary = "規則範例", description = "spEL 規則範例")
-    @PostMapping("/demoExample")
-    public ResponseEntity<ResultVo> demoExample() {
-        ResultVo resultVo = demoService.demoExample();
+    @PostMapping("/spelDemo1")
+    public ResponseEntity<ResultVo> spelDemo1() {
+        ResultVo resultVo = demoService.spelDemo1();
+        return ResponseEntity.ok(resultVo);
+    }
+
+    @Operation(summary = "DTO資料範例: 取出指定欄位", description = "DTO資料範例: 取出指定欄位")
+    @PostMapping("/spelDemo2")
+    public ResponseEntity<String> spelDemo2() {
+        String resultVo = demoService.spelDemo2();
         return ResponseEntity.ok(resultVo);
     }
 
     @Operation(summary = "金額計算範例: 三者取其大", description = "金額計算範例: 三者取其大")
-    @PostMapping("/demoExample1")
-    public ResponseEntity<Double> demoExample1() {
-        Double resultVo = demoService.spelCalcDemo1();
+    @PostMapping("/spelDemo3")
+    public ResponseEntity<Double> spelDemo3() {
+        Double resultVo = demoService.spelDemo3();
         return ResponseEntity.ok(resultVo);
     }
 }
