@@ -105,7 +105,7 @@ public class DemoService {
 
         try {
             // 將自製方法註冊進 SpEL 環境
-            Method calcMethod = DemoService.class.getDeclaredMethod("calcTotalAmount", Double.class, Double.class, Double.class);
+            Method calcMethod = CalcService.class.getDeclaredMethod("calcTotalAmount", Double.class, Double.class, Double.class);
             context.registerFunction("calcTotalAmount", calcMethod);
 
             // SpEL 表達式：呼叫自製方法
@@ -117,18 +117,6 @@ public class DemoService {
         } catch (Exception e) {
             return null;
         }
-    }
-
-    /**
-     * 自製金額計算方法
-     */
-    private static Double calcTotalAmount(Double base, Double bonus, Double taxRate) {
-        if (base == null) base = 0.0;
-        if (bonus == null) bonus = 0.0;
-        if (taxRate == null) taxRate = 1.0;
-
-        // 總金額 = (基本薪資 + 獎金) × 稅率
-        return (base + bonus) * taxRate;
     }
 
 }

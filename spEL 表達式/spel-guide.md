@@ -253,3 +253,59 @@ spEL 表達式 可以用來進行 數值計算，並且 可以使用 JAVA 的函
         return result;  // 輸出: 1150
     }
     ```
+
+---
+
+### 10. 使用 自製函式
+
+- SpEL 註冊自製函式
+  
+  ```java
+  Method calcMethod = 自製函式程式.class.getDeclaredMethod("自製函式名稱", 輸入參數型態.class, ...);
+  context.registerFunction("自製函式名稱", calcMethod);
+  ```
+
+- 會有錯誤 需要 `try-catch`
+
+- 註冊後，就可以透過 `#自製函式名稱(參數)` 於 表達式中使用
+
+```java
+public Double spelDemo4() {
+    // 模擬輸入變數
+    Map<String, Object> dataMap = new HashMap<>();
+    dataMap.put("baseSalary", 50000);  // 基本薪資
+    dataMap.put("bonus", 8000);        // 獎金
+    dataMap.put("taxRate", 0.9);       // 稅率
+
+    // 初始化 SpEL 解析環境
+    ExpressionParser parser = new SpelExpressionParser();
+    StandardEvaluationContext context = new StandardEvaluationContext();
+    dataMap.forEach(context::setVariable);
+
+    try {
+        // 將自製方法註冊進 SpEL 環境
+        Method calcMethod = DemoService.class.getDeclaredMethod("calcTotalAmount", Double.class, Double.class, Double.class);
+        context.registerFunction("calcTotalAmount", calcMethod);
+
+        // SpEL 表達式：呼叫自製方法
+        String rule = "#calcTotalAmount(#baseSalary, #bonus, #taxRate)";
+
+        Double result = parser.parseExpression(rule).getValue(context, Double.class);
+        return result;
+    } catch (Exception e) {
+        return null;
+    }
+}
+
+/**
+ * 自製金額計算方法
+ */
+private static Double calcTotalAmount(Double base, Double bonus, Double taxRate) {
+    if (base == null) base = 0.0;
+    if (bonus == null) bonus = 0.0;
+    if (taxRate == null) taxRate = 1.0;
+
+    // 總金額 = (基本薪資 + 獎金) × 稅率
+    return (base + bonus) * taxRate;
+}
+```
