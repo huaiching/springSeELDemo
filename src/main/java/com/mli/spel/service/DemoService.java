@@ -206,8 +206,7 @@ public class DemoService {
 
         try {
             // 將自製方法註冊進 SpEL 環境
-            Method calcMethod = CalcService.class.getDeclaredMethod("calcTotalAmount", Double.class, Double.class, Double.class);
-            context.registerFunction("calcTotalAmount", calcMethod);
+            spelRegister(context);
 
             // SpEL 表達式：呼叫自製方法
             String ruleCode = "#calcTotalAmount(#baseSalary, #bonus, #taxRate)";
@@ -246,6 +245,16 @@ public class DemoService {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    /**
+     * 將自製方法註冊進 SpEL 環境
+     * @param context
+     * @throws NoSuchMethodException
+     */
+    private void spelRegister(StandardEvaluationContext context) throws NoSuchMethodException {
+        Method calcMethod = CalcService.class.getDeclaredMethod("calcTotalAmount", Double.class, Double.class, Double.class);
+        context.registerFunction("calcTotalAmount", calcMethod);
     }
 
     /**
